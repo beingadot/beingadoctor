@@ -133,20 +133,16 @@ export default function HowItWorks() {
 
                 {/* recording */}
                 <div className={cn("ms ms-rec", ph === 1 && "on")}>
-                  <Media
-                    still
-                    src={DOCTORS[3].video}
-                    className="absolute inset-0 h-full w-full object-cover opacity-80"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/35" />
-                  <div className="relative z-10 mt-1 text-[10px] font-semibold opacity-90">
-                    <span className="recdot text-[#ff5b5b]">●</span> REC 00:0{ph === 1 ? sub + 1 : 0}
-                  </div>
-                  <b className="relative z-10 mt-1 text-[12px]">Video + voice</b>
-                  <div className="relative z-10 mt-auto rounded-lg bg-black/55 p-2 text-[9.5px] leading-snug text-white/85">
-                    One take per month. We do the rest.
-                  </div>
-                </div>
+                <video src="/video/reel-2.mp4" autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover opacity-80"/>
+  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/35" />
+  <div className="relative z-10 mt-1 text-[10px] font-semibold opacity-90">
+    <span className="recdot text-[#ff5b5b]">●</span> REC 00:0{ph === 1 ? sub + 1 : 0}
+  </div>
+  <b className="relative z-10 mt-1 text-[12px]">Video + voice</b>
+  <div className="relative z-10 mt-auto rounded-lg bg-black/55 p-2 text-[9.5px] leading-snug text-white/85">
+    One take per month. We do the rest.
+  </div>
+</div>
 
                 {/* whatsapp approval */}
                 <div className={cn("ms ms-chat", ph === 2 && "on")}>
