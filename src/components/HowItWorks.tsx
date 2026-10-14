@@ -157,7 +157,7 @@ export default function HowItWorks() {
                   </div>
                   <div className={cn("msg", ph === 2 && "on")}>
                    <img
-                   src="/chatpic1.jpg" alt="Chat preview" className="mb-1.5 h-[80px] w-full rounded-md object-cover"/>
+                   src="/img/chatpic1.jpg" alt="Chat preview" className="mb-1.5 h-[80px] w-full rounded-md object-cover"/>
                    Your Reel on chest pain is ready. Post it?
                   </div>
                   <div className={cn("msg me", ph === 2 && sub >= 3 && "on")} style={{ transitionDelay: "0.35s" }}>
