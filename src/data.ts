@@ -5,8 +5,6 @@ export const EMAIL = "beingadot@gmail.com";
 export const wa = (t: string) => `https://wa.me/${WA_NUM}?text=${encodeURIComponent(t)}`;
 export const inr = (n: number) => "₹" + n.toLocaleString("en-IN");
 
-export interface Segment { t: string; hl?: boolean }
-
 /* ---- doctors + their Reels ----
    Ordered by strength of content: the first is the main Hero video,
    the second is the swap video, the rest follow in the Formats section.
@@ -18,8 +16,6 @@ export interface Doctor {
   role: string; // short label, e.g. for the Google-profile mockup
   video: string;
   grad: string; // shows behind the video while it loads
-  lines: string[]; // what the doctor says, used for the synced captions
-  cap: Segment[]; // short headline caption
   format: string;
 }
 export type HeroDoc = Doctor;
@@ -32,12 +28,7 @@ export const DOCTORS: Doctor[] = [
     role: "Cardiologist",
     video: "video/reel-4.mp4",
     grad: "linear-gradient(210deg,#0f2e7e,#0b1a4a)",
-    lines: [
-      "Kya har chest pain heart attack hota hai?",
-      "Zaroori nahi!",
-      "Lekin achanak seene mein dard ho, toh ignore mat kijiye.",
-      "Turant medical help lijiye.",
-    ],
+    format: "Myth vs fact",
   },
   {
     id: "sharma-gyn",
@@ -46,12 +37,7 @@ export const DOCTORS: Doctor[] = [
     role: "Gynecologist",
     video: "video/reel-2.mp4",
     grad: "linear-gradient(210deg,#0f6b4f,#06281f)",
-    lines: [
-      "Periods baar-baar irregular ho rahe hain?",
-      "Ise normal samajhkar ignore mat kijiye!",
-      "Yeh hormonal imbalance ya PCOS ka sanket ho sakta hai.",
-      "Samay par checkup zaroor karayein.",
-    ],
+    format: "Patient questions",
   },
   {
     id: "sharma-dental",
@@ -60,12 +46,7 @@ export const DOCTORS: Doctor[] = [
     role: "Dentist",
     video: "video/reel-3.mp4",
     grad: "linear-gradient(210deg,#0f2e7e,#131a3d)",
-    lines: [
-      "Brush karte waqt masudon se khoon aata hai?",
-      "Ise normal samajhkar ignore mat kijiye!",
-      "Ye gum disease ka sanket ho sakta hai.",
-      "Dentist se checkup zaroor karayein.",
-    ],
+    format: "Warning signs",
   },
   {
     id: "joshi",
@@ -74,11 +55,7 @@ export const DOCTORS: Doctor[] = [
     role: "Homeopath",
     video: "video/reel-1.mp4",
     grad: "linear-gradient(210deg,#a35a10,#2a1604)",
-    lines: [
-      "Baar-baar wahi pareshani ho rahi hai?",
-      "Sirf lakshan nahi, uski wajah samajhna bhi zaroori hai.",
-      "Homeopathy mein hum aapki poori health history ko samajhkar treatment plan banate hain.",
-    ],
+    format: "Treatment approach",
   },
 ];
 
@@ -169,7 +146,6 @@ export interface WaChat {
   title: string; // e.g. "Beingadot × Dr. Ankit Gupta"
   docName: string;
   messages: WaChatMsg[];
-  caption: string; // line below the phone
 }
 /* Sample threads for layout only. Replace with real, permissioned chats. */
 export const WA_CHATS: WaChat[] = [
@@ -185,7 +161,6 @@ export const WA_CHATS: WaChat[] = [
       { from: "d", text: "Isi ko final maan lete hain", time: "9:49 AM", hl: true },
       { from: "b", text: "Theek hai sir, post kar diya", time: "9:50 AM" },
     ],
-    caption: "Dr. Ankit Gupta, sample approval thread",
   },
   {
     title: "Beingadot x Dr. Priya Verma",
@@ -199,7 +174,6 @@ export const WA_CHATS: WaChat[] = [
       { from: "d", text: "Cover me clinic ka naam chhota rakhna", time: "10:01 AM" },
       { from: "b", text: "Ji mam, updated cover ke saath bhejta hu", time: "10:02 AM" },
     ],
-    caption: "Dr. Priya Verma, sample approval thread",
   },
   {
     title: "Beingadot x Dr. Praveen Agarwal",
@@ -212,7 +186,6 @@ export const WA_CHATS: WaChat[] = [
       { from: "d", text: "Lag nahi raha ki record nahi kiya", time: "9:21 AM", hl: true },
       { from: "b", text: "Thank you sir. Address wala version bhejta hu", time: "9:22 AM" },
     ],
-    caption: "Dr. Praveen Agarwal, sample approval thread",
   },
 ];
 
@@ -273,7 +246,6 @@ export const PIPE_8: PipeStep[] = [
   { label: "Script", icon: "script", detail: "Simple Hinglish script" },
   { label: "Face clone", icon: "face", detail: "Face cloned" },
   { label: "Voice clone", icon: "voice", detail: "Voice cloned" },
-  { label: "Captions", icon: "captions", detail: "Hinglish captions added" },
   { label: "Edit", icon: "edit", detail: "Cuts and effects" },
   { label: "You approve", icon: "approve", detail: "Yes, post it" },
   { label: "Posted", icon: "posted", detail: "Live on Instagram" },
