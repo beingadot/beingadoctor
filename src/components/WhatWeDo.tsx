@@ -92,7 +92,7 @@ export default function WhatWeDo() {
           <Reveal delay={0.12}>
             <div className="card card-b h-full">
               <div className="im relative">
-                <Photo src="img/be_trusted.jpg" alt="Doctor recording a Reel" />
+                <Photo src="img/be-trusted.jpg" alt="Doctor recording a Reel" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 {/* floating calendar card */}
                 <div className="absolute right-2 top-2 rounded-lg bg-white p-2 shadow-lg text-[8px]">
@@ -109,9 +109,6 @@ export default function WhatWeDo() {
                     <span className="flex items-center gap-0.5"><span className="h-1.5 w-1.5 rounded bg-nv" /> Posted</span>
                     <span className="flex items-center gap-0.5"><span className="h-1.5 w-1.5 rounded bg-ly" /> Planned</span>
                   </div>
-                </div>
-                <div className="absolute bottom-2 left-2 z-10 rounded-md bg-black/50 px-2 py-1 text-[9px] font-semibold text-white backdrop-blur-sm">
-                  Kya har chest pain heart attack hota hai?
                 </div>
               </div>
               <h3><i><Video size={11} /></i>Be trusted</h3>
