@@ -95,7 +95,7 @@ export default function WhatWeDo() {
                 <Photo src="img/be-trusted.jpg" alt="Doctor recording a Reel" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 {/* floating calendar card */}
-                <div className="absolute right-2 top-2 rounded-lg bg-white p-2 shadow-lg text-[8px]">
+                <div className="absolute right-2 bottom-2 rounded-lg bg-white p-2 shadow-lg text-[8px]">
                   <div className="flex items-center gap-1 mb-1">
                     <span className="h-2 w-2 rounded bg-nv" /> This month
                     <span className="ml-auto text-[7px] font-semibold text-nv">Instagram</span>
