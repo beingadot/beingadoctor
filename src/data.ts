@@ -38,7 +38,7 @@ export const DOCTORS: Doctor[] = [
       "Lekin achanak seene mein dard ho, toh ignore mat kijiye.",
       "Turant medical help lijiye.",
     ],
-    cap: [{ t: "⠀ " }, { t: "⠀ ", hl: true }, { t: " ⠀ " }],
+    cap: [{ t: "Kya har chest pain " }, { t: "HEART ATTACK", hl: true }, { t: " hota hai?" }],
     format: "Myth vs fact",
   },
   {
