@@ -24,7 +24,7 @@ export default function Pricing() {
             <>
               Record once. We create a steady flow of Reels that look and sound like you.
               <div className="no-scrollbar mt-5 flex items-center overflow-x-auto rounded-2xl border border-ln bg-white px-4 py-3.5 text-left">
-                <span className="mr-3.5 whitespace-nowrap font-d text-[9px] font-bold tracking-[0.12em] text-mu">
+                <span className="mr-3.5 shrink-0 whitespace-nowrap font-d text-[9px] font-bold tracking-[0.12em] text-mu">
                   EVERY PACKAGE
                   <br />
                   INCLUDES
@@ -43,7 +43,7 @@ export default function Pricing() {
           }
         />
 
-        <div className="no-scrollbar -mx-5 mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 md:mx-0 md:grid md:grid-cols-3 md:gap-5 md:overflow-visible md:px-0 md:pb-0 lg:pt-3">
+        <div className="no-scrollbar -mx-5 mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-6 pt-5 md:mx-0 md:grid md:grid-cols-3 md:gap-5 md:overflow-visible md:px-0 md:pb-0 md:pt-3">
           {PLANS.map((p, k) => (
             <Reveal key={p.name} delay={k * 0.12} className="min-w-[84%] snap-center sm:min-w-[360px] md:min-w-0">
               <div className={cn("pr h-full", p.pop && "pop")}>
@@ -163,7 +163,7 @@ export function Services() {
           }
         />
 
-        <div className="no-scrollbar -mx-5 mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 md:mx-0 md:grid md:grid-cols-3 md:gap-5 md:overflow-visible md:px-0 md:pb-0">
+        <div className="no-scrollbar -mx-5 mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-6 pt-2 md:mx-0 md:grid md:grid-cols-3 md:gap-5 md:overflow-visible md:px-0 md:pb-0 md:pt-0">
           {SERVICES.map((s, k) => {
             const Icon = S_ICONS[s.icon];
             return (
