@@ -38,8 +38,6 @@ export const DOCTORS: Doctor[] = [
       "Lekin achanak seene mein dard ho, toh ignore mat kijiye.",
       "Turant medical help lijiye.",
     ],
-    cap: [{ t: "Kya har chest pain " }, { t: "HEART ATTACK", hl: true }, { t: " hota hai?" }],
-    format: "Myth vs fact",
   },
   {
     id: "sharma-gyn",
@@ -54,8 +52,6 @@ export const DOCTORS: Doctor[] = [
       "Yeh hormonal imbalance ya PCOS ka sanket ho sakta hai.",
       "Samay par checkup zaroor karayein.",
     ],
-    cap: [{ t: "Periods baar-baar " }, { t: "IRREGULAR", hl: true }, { t: " ho rahe hain?" }],
-    format: "Patient questions",
   },
   {
     id: "sharma-dental",
@@ -70,8 +66,6 @@ export const DOCTORS: Doctor[] = [
       "Ye gum disease ka sanket ho sakta hai.",
       "Dentist se checkup zaroor karayein.",
     ],
-    cap: [{ t: "Masudon se " }, { t: "KHOON", hl: true }, { t: " aata hai?" }],
-    format: "Warning signs",
   },
   {
     id: "joshi",
@@ -85,8 +79,6 @@ export const DOCTORS: Doctor[] = [
       "Sirf lakshan nahi, uski wajah samajhna bhi zaroori hai.",
       "Homeopathy mein hum aapki poori health history ko samajhkar treatment plan banate hain.",
     ],
-    cap: [{ t: "Baar-baar " }, { t: "WAHI PARESHANI", hl: true }, { t: " ho rahi hai?" }],
-    format: "Treatment approach",
   },
 ];
 
