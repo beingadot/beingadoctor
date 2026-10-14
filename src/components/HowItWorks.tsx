@@ -14,7 +14,6 @@ import {
   PenLine,
   UserCheck,
   Mic,
-  Type as TypeIcon,
   Scissors,
   CheckCircle2,
   Send,
@@ -39,14 +38,16 @@ const PIPE_ICONS: Record<string, typeof Check> = {
   script: PenLine,
   face: UserCheck,
   voice: Mic,
-  captions: TypeIcon,
   edit: Scissors,
   approve: CheckCircle2,
   posted: Send,
 };
 
-/* full loop: 24 ticks x 1.5s = 36 seconds */
+/* full loop for columns 02 and 03: 24 ticks x 1.5s = 36 seconds */
 const LOOP = 24;
+
+/* column 01 phase lengths in seconds: [call, recording, approval] */
+const PHASES = [3, 5, 2];
 
 export default function HowItWorks() {
   const [T, setT] = useState(0);
@@ -55,12 +56,26 @@ export default function HowItWorks() {
     return () => clearInterval(id);
   }, []);
 
-  /* column 01 */
-  const ph = T < 8 ? 0 : T < 16 ? 1 : 2;
-  const sub = T % 8;
+  /* column 01 has its own timer: 3s call, 5s recording, 2s approval */
+  const [ph, setPh] = useState(0); // 0 = call, 1 = recording, 2 = approval
+  const [sub, setSub] = useState(0); // seconds elapsed inside the current phase
+  useEffect(() => {
+    let p = 0;
+    let s = 0;
+    const id = setInterval(() => {
+      s += 1;
+      if (s >= PHASES[p]) {
+        s = 0;
+        p = (p + 1) % PHASES.length;
+        setPh(p);
+      }
+      setSub(s);
+    }, 1000);
+    return () => clearInterval(id);
+  }, []);
 
   /* column 02 */
-  const pipeIdx = Math.min(7, Math.floor(T / 3));
+  const pipeIdx = Math.min(PIPE_8.length - 1, Math.floor(T / 3));
   const calDay = POST_DAYS[T % POST_DAYS.length];
   const reelsReady = Math.min(POST_DAYS.length, Math.floor(T / 1.7) + 1);
 
@@ -106,12 +121,12 @@ export default function HowItWorks() {
 
             <div className="mini">
               <div className="scr">
-                {/* strategy call */}
+                {/* strategy call (3 seconds) */}
                 <div className={cn("ms ms-call", ph === 0 && "on")}>
                   <div className="avc" aria-hidden="true">B</div>
                   <b className="text-[12px]">Beingadot strategy call</b>
                   <div className="mb-1 mt-0.5 text-[10px] opacity-70">
-                    00:{String(sub * 3).padStart(2, "0")} · voice call
+                    00:{String(sub).padStart(2, "0")} · voice call
                   </div>
                   {["Your goals", "Monthly topics", "Your style"].map((s, k) => (
                     <div key={k} className={cn("ci", (ph > 0 || k <= sub) && "on")}>
@@ -131,23 +146,33 @@ export default function HowItWorks() {
                   </div>
                 </div>
 
-                {/* recording */}
+                {/* recording (5 seconds) */}
                 <div className={cn("ms ms-rec", ph === 1 && "on")}>
-                <video src="/video/reel-2.mp4" autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover opacity-80"/>
-  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/35" />
-  <div className="relative z-10 mt-1 text-[10px] font-semibold opacity-90">
-    <span className="recdot text-[#ff5b5b]">●</span> REC 00:0{ph === 1 ? sub + 1 : 0}
-  </div>
-  <b className="relative z-10 mt-1 text-[12px]">Video + voice</b>
-  <div className="relative z-10 mt-auto rounded-lg bg-black/55 p-2 text-[9.5px] leading-snug text-white/85">
-    One take per month. We do the rest.
-  </div>
-</div>
+                  <video
+                    src="/video/reel-2.mp4"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="absolute inset-0 h-full w-full object-cover opacity-80"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/35" />
+                  <div className="relative z-10 mt-1 text-[10px] font-semibold opacity-90">
+                    <span className="recdot text-[#ff5b5b]">●</span> REC 00:0{ph === 1 ? sub + 1 : 0}
+                  </div>
+                  <b className="relative z-10 mt-1 text-[12px]">Video + voice</b>
+                  <div className="relative z-10 mt-auto rounded-lg bg-black/55 p-2 text-[9.5px] leading-snug text-white/85">
+                    One take per month. We do the rest.
+                  </div>
+                </div>
 
-                {/* whatsapp approval */}
+                {/* whatsapp approval (2 seconds) */}
                 <div className={cn("ms ms-chat", ph === 2 && "on")}>
                   <div className="mb-1 flex items-center gap-2 border-b border-black/10 pb-1.5 text-left">
-                    <span className="grid h-6 w-6 place-items-center rounded-full bg-nv font-d text-[10px] font-extrabold text-white" aria-hidden="true">
+                    <span
+                      className="grid h-6 w-6 place-items-center rounded-full bg-nv font-d text-[10px] font-extrabold text-white"
+                      aria-hidden="true"
+                    >
                       B
                     </span>
                     <div className="text-[10.5px] font-bold leading-tight">
@@ -156,11 +181,17 @@ export default function HowItWorks() {
                     </div>
                   </div>
                   <div className={cn("msg", ph === 2 && "on")}>
-                   <img
-                   src="/img/chatpic1.jpg" alt="Chat preview" className="mb-1.5 h-[80px] w-full rounded-md object-cover"/>
-                   Your Reel on chest pain is ready. Post it?
+                    <img
+                      src="/img/chatpic1.jpg"
+                      alt="Chat preview"
+                      className="mb-1.5 h-[80px] w-full rounded-md object-cover"
+                    />
+                    Your Reel on delayed periods is ready. Post it?
                   </div>
-                  <div className={cn("msg me", ph === 2 && sub >= 3 && "on")} style={{ transitionDelay: "0.35s" }}>
+                  <div
+                    className={cn("msg me", ph === 2 && sub >= 1 && "on")}
+                    style={{ transitionDelay: "0.35s" }}
+                  >
                     Yes, post it
                   </div>
                 </div>
@@ -203,7 +234,7 @@ export default function HowItWorks() {
               </div>
             </div>
 
-            {/* 8-step pipeline */}
+            {/* pipeline */}
             <div className="mt-6 grid grid-cols-4 gap-1.5">
               {PIPE_8.map((step: PipeStep, k) => {
                 const Icon = PIPE_ICONS[step.icon] ?? ClipboardList;
