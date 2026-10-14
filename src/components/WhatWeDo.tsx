@@ -1,7 +1,31 @@
+import { useState } from "react";
 import { ArrowRight, Search, Video, MousePointerClick, Phone, MessageCircle, CalendarCheck, BellRing, MapPin } from "lucide-react";
 import Media from "./Media";
-import { DOCTORS } from "../data";
 import { Head, Reveal } from "./shared";
+
+/* Optional photo for a card. Drop the file into /public/img/ and it appears;
+   if the file is missing it hides itself and the mockup underneath shows. */
+function Photo({ src, alt = "" }: { src: string; alt?: string }) {
+  const [ok, setOk] = useState(true);
+  if (!ok) return null;
+  return (
+    <img
+      src={src}
+      alt={alt}
+      loading="lazy"
+      onError={() => setOk(false)}
+      className="absolute inset-0 h-full w-full object-cover"
+    />
+  );
+}
+
+/* Optional looping muted clip for a card. Drop the file into /public/video/;
+   if it is missing the clip hides itself and what is underneath shows. */
+function Clip({ src, className = "object-cover" }: { src: string; className?: string }) {
+  const [ok, setOk] = useState(true);
+  if (!ok) return null;
+  return <Media src={src} onFail={() => setOk(false)} className={`absolute inset-0 h-full w-full ${className}`} />;
+}
 
 export default function WhatWeDo() {
   return (
@@ -25,7 +49,8 @@ export default function WhatWeDo() {
                 {/* map mockup */}
                 <div className="absolute inset-0 bg-[#e8e4dc]">
                   <div className="absolute inset-0 opacity-30" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cpath d='M0 40h80M40 0v80' stroke='%23bbb' stroke-width='.4'/%3E%3C/svg%3E\")" }} />
-                  <div className="absolute bottom-3 left-3 right-3 rounded-xl bg-white p-3 shadow-lg">
+                  <Clip src="video/be-found.mp4" />
+                  <div className="absolute bottom-3 left-3 right-3 z-[1] rounded-xl bg-white p-3 shadow-lg">
                     <div className="flex items-center gap-2">
                       <MapPin size={14} className="text-nv" />
                       <div>
@@ -67,11 +92,7 @@ export default function WhatWeDo() {
           <Reveal delay={0.12}>
             <div className="card card-b h-full">
               <div className="im relative">
-                <Media
-                  still
-                  src={DOCTORS[0].video}
-                  className="absolute inset-0 h-full w-full object-cover"
-                />
+                <Photo src="img/be_trusted.jpg" alt="Doctor recording a Reel" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 {/* floating calendar card */}
                 <div className="absolute right-2 top-2 rounded-lg bg-white p-2 shadow-lg text-[8px]">
