@@ -251,7 +251,7 @@ body:after {
 .pc { flex: 1; min-width: 0; min-height: 86px; border-radius: 10px; background: #fff; color: #111; font-weight: 700; font-size: 9px; line-height: 1.3; padding: 6px; display: flex; align-items: flex-end; opacity: 0.5; transition: 0.45s; border: 2px solid transparent; }
 .pc.fill { opacity: 1; }
 .pc.on { opacity: 1; transform: translateY(-6px); border-color: var(--color-ly); box-shadow: 0 12px 24px -10px rgba(221, 254, 0, 0.5); }
-.nt { background: #fff; color: #111; border-radius: 14px; padding: 11px 14px; box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.45); font-size: 12px; transition: 0.5s; opacity: 0.22; transform: translateY(9px); margin-bottom: 10px; }
+.nt { background: #fff; color: #111; border-radius: 14px; padding: 11px 14px; box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.45); font-size: 12px; opacity: 1; transform: none; margin-bottom: 10px; }
 .nt.on { opacity: 1; transform: none; }
 .nt small { color: #666; display: flex; align-items: center; gap: 5px; }
 
@@ -405,7 +405,11 @@ html { overflow-x: clip; max-width: 100%; }
 body { overflow-x: clip; max-width: 100%; }
 img, video, svg, canvas { max-width: 100%; }
 main, section, header, footer { max-width: 100%; }
-main *, section * { min-width: 0; }
+/* in @layer base so Tailwind utilities (min-w-[84%], min-w-[360px] ...) can still override it.
+   Unlayered, this rule beat every utility and collapsed the swipe cards on mobile. */
+@layer base {
+  main *, section * { min-width: 0; }
+}
 
 /* ---------------- skip link ---------------- */
 .skip {
