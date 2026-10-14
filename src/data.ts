@@ -7,37 +7,91 @@ export const inr = (n: number) => "₹" + n.toLocaleString("en-IN");
 
 export interface Segment { t: string; hl?: boolean }
 
-/* ---- hero: two doctors that swap ---- */
-export interface HeroDoc {
+/* ---- doctors + their Reels ----
+   Ordered by strength of content: the first is the main Hero video,
+   the second is the swap video, the rest follow in the Formats section.
+   Video files live in /public/video/ (see public/video/README.txt). */
+export interface Doctor {
+  id: string;
   name: string;
-  spec: string;
-  img: string;
-  grad: string;
-  cap: Segment[];
-  tag: string; // "Made with AI clone" label
-  format: string; // e.g. "Myth vs fact"
-  time: string; // e.g. "0:33"
+  spec: string; // shown next to the name
+  role: string; // short label, e.g. for the Google-profile mockup
+  video: string;
+  grad: string; // shows behind the video while it loads
+  lines: string[]; // what the doctor says, used for the synced captions
+  cap: Segment[]; // short headline caption
+  format: string;
 }
-export const HERO_A: HeroDoc = {
-  name: "Dr. Meera Iyer",
-  spec: "Consultant Dermatologist",
-  img: "img/reel-2.jpg",
-  grad: "linear-gradient(210deg,#0f6b4f,#06281f)",
-  cap: [{ t: "Pimples sirf " }, { t: "DIRTY SKIN", hl: true }, { t: " se nahi" }],
-  tag: "",
-  format: "Myth vs fact",
-  time: "",
-};
-export const HERO_B: HeroDoc = {
-  name: "Dr. Arjun Rao",
-  spec: "Consultant Physician",
-  img: "img/reel-1.jpg",
-  grad: "linear-gradient(210deg,#0f2e7e,#0b1a4a)",
-  cap: [{ t: "ANGIOGRAPHY", hl: true }, { t: " kya hai?" }],
-  tag: "",
-  format: "Procedures explained",
-  time: "",
-};
+export type HeroDoc = Doctor;
+
+export const DOCTORS: Doctor[] = [
+  {
+    id: "desai",
+    name: "Dr. Siddharth Desai",
+    spec: "Cardiology & General Medicine",
+    role: "Cardiologist",
+    video: "video/reel-4.mp4",
+    grad: "linear-gradient(210deg,#0f2e7e,#0b1a4a)",
+    lines: [
+      "Kya har chest pain heart attack hota hai?",
+      "Zaroori nahi!",
+      "Lekin achanak seene mein dard ho, toh ignore mat kijiye.",
+      "Turant medical help lijiye.",
+    ],
+    cap: [{ t: "Kya har chest pain " }, { t: "HEART ATTACK", hl: true }, { t: " hota hai?" }],
+    format: "Myth vs fact",
+  },
+  {
+    id: "sharma-gyn",
+    name: "Dr. Ananya Sharma",
+    spec: "Gynecology",
+    role: "Gynecologist",
+    video: "video/reel-2.mp4",
+    grad: "linear-gradient(210deg,#0f6b4f,#06281f)",
+    lines: [
+      "Periods baar-baar irregular ho rahe hain?",
+      "Ise normal samajhkar ignore mat kijiye!",
+      "Yeh hormonal imbalance ya PCOS ka sanket ho sakta hai.",
+      "Samay par checkup zaroor karayein.",
+    ],
+    cap: [{ t: "Periods baar-baar " }, { t: "IRREGULAR", hl: true }, { t: " ho rahe hain?" }],
+    format: "Patient questions",
+  },
+  {
+    id: "sharma-dental",
+    name: "Dr. Ananya Sharma",
+    spec: "Dentistry",
+    role: "Dentist",
+    video: "video/reel-3.mp4",
+    grad: "linear-gradient(210deg,#0f2e7e,#131a3d)",
+    lines: [
+      "Brush karte waqt masudon se khoon aata hai?",
+      "Ise normal samajhkar ignore mat kijiye!",
+      "Ye gum disease ka sanket ho sakta hai.",
+      "Dentist se checkup zaroor karayein.",
+    ],
+    cap: [{ t: "Masudon se " }, { t: "KHOON", hl: true }, { t: " aata hai?" }],
+    format: "Warning signs",
+  },
+  {
+    id: "joshi",
+    name: "Dr. Vikram Joshi",
+    spec: "Homeopathy",
+    role: "Homeopath",
+    video: "video/reel-1.mp4",
+    grad: "linear-gradient(210deg,#a35a10,#2a1604)",
+    lines: [
+      "Baar-baar wahi pareshani ho rahi hai?",
+      "Sirf lakshan nahi, uski wajah samajhna bhi zaroori hai.",
+      "Homeopathy mein hum aapki poori health history ko samajhkar treatment plan banate hain.",
+    ],
+    cap: [{ t: "Baar-baar " }, { t: "WAHI PARESHANI", hl: true }, { t: " ho rahi hai?" }],
+    format: "Treatment approach",
+  },
+];
+
+export const HERO_A: HeroDoc = DOCTORS[0];
+export const HERO_B: HeroDoc = DOCTORS[1];
 
 export const SPECIALTIES = [
   "Gynaecologists", "Dermatologists", "Physicians", "General surgeons", "Dentists",
@@ -46,36 +100,10 @@ export const SPECIALTIES = [
 ];
 
 export const FORMATS = [
-  {
-    no: "01", title: "Procedures explained simply",
-    desc: "What happens, step by step, in words patients understand.",
-    cap: "What happens during an angiography?", doc: "Dr. Arjun Rao", spec: "Consultant Physician",
-    img: "img/reel-1.jpg", img2: "img/reel-3.jpg", grad: "linear-gradient(210deg,#0f2e7e,#0b1a4a)",
-  },
-  {
-    no: "02", title: "Quick health tips",
-    desc: "One practical tip patients can use straight away.",
-    cap: "One tip for clearer skin this week", doc: "Dr. Meera Iyer", spec: "Dermatologist",
-    img: "img/reel-2.jpg", img2: "img/reel-4.jpg", grad: "linear-gradient(210deg,#0f6b4f,#06281f)",
-  },
-  {
-    no: "03", title: "Myth vs fact",
-    desc: "A common belief, checked and corrected in plain language.",
-    cap: "Subah garam paani se belly fat?", doc: "Dr. Nikhil Shah", spec: "Naturopathy",
-    img: "img/reel-4.jpg", img2: "img/reel-1.jpg", grad: "linear-gradient(210deg,#a35a10,#2a1604)",
-  },
-  {
-    no: "04", title: "Answers to common patient questions",
-    desc: "The questions you hear most, answered once, clearly.",
-    cap: "Period late? Pregnancy hi reason nahi", doc: "Dr. Kavya Nair", spec: "Gynaecologist",
-    img: "img/reel-3.jpg", img2: "img/reel-2.jpg", grad: "linear-gradient(210deg,#0f2e7e,#131a3d)",
-  },
-  {
-    no: "05", title: "Clinic updates and announcements",
-    desc: "Timings, holidays and news, in your own voice.",
-    cap: "Clinic timings this Diwali", doc: "Dr. Arjun Rao", spec: "Consultant Physician",
-    img: "img/reel-1.jpg", img2: "img/reel-4.jpg", grad: "linear-gradient(210deg,#0f2e7e,#101f4d)",
-  },
+  { no: "01", title: "Myth vs fact", desc: "A common belief, checked and corrected in plain language.", doc: DOCTORS[0] },
+  { no: "02", title: "Answers to common patient questions", desc: "The questions you hear most, answered once, clearly.", doc: DOCTORS[1] },
+  { no: "03", title: "Warning signs not to ignore", desc: "Early symptoms patients brush off, and when to see a doctor.", doc: DOCTORS[2] },
+  { no: "04", title: "Your treatment approach, explained", desc: "How you treat, in your own words, so patients know what to expect.", doc: DOCTORS[3] },
 ];
 
 export const INCLUDES = ["Content strategy", "Scripting", "AI cloning", "Editing", "Posting"];
@@ -249,8 +277,8 @@ export interface PipeStep {
   detail: string;
 }
 export const PIPE_8: PipeStep[] = [
-  { label: "Strategy", icon: "plan", detail: "Subah garam paani se belly fat?" },
-  { label: "Script", icon: "script", detail: "Sirf bimari ke liye nahi" },
+  { label: "Strategy", icon: "plan", detail: "Chest pain: myth vs fact" },
+  { label: "Script", icon: "script", detail: "Simple Hinglish script" },
   { label: "Face clone", icon: "face", detail: "Face cloned" },
   { label: "Voice clone", icon: "voice", detail: "Voice cloned" },
   { label: "Captions", icon: "captions", detail: "Hinglish captions added" },

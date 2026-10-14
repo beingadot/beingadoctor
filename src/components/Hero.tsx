@@ -1,43 +1,33 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Play, Pause, MessageCircle, BadgeCheck, ArrowLeftRight } from "lucide-react";
+import { Play, Pause, Volume2, VolumeX, MessageCircle, BadgeCheck, ArrowLeftRight } from "lucide-react";
 import { HERO_A, HERO_B, SPECIALTIES, wa, type HeroDoc } from "../data";
 import { EASE, useUi } from "./shared";
+import Media from "./Media";
 
-/* Hinglish caption tracks, roughly 13 seconds each */
-const REEL_LINES: Record<string, string[]> = {
-  "Dr. Meera Iyer": [
-    "Pimples ka reason sirf ganda chehra nahi hota.",
-    "Hormones, stress aur diet sab matter karta hai.",
-    "Week me ek baar basics theek rakho, skin khud sudhregi.",
-  ],
-  "Dr. Arjun Rao": [
-    "Angiography me hota kya hai? Main 30 second me samjha deta hu.",
-    "Dil ki artery me blockage hai ki nahi, yahi test batata hai.",
-    "Tension lene ki zarurat nahi, procedure painless hota hai.",
-  ],
-};
-const LINE_MS = 4500;
+const initials = (n: string) =>
+  n.replace(/^Dr\.?\s*/i, "").split(/\s+/).map((w) => w[0]).slice(0, 2).join("").toUpperCase();
 
 /* ------------------------------------------------------------------ */
-/* caption player: timed Hinglish caption track over the still          */
+/* reel player: the real video, with captions synced to what is said    */
 /* ------------------------------------------------------------------ */
 function ReelPlayer({ doc }: { doc: HeroDoc }) {
-  const lines = REEL_LINES[doc.name] ?? [doc.cap.map((s) => s.t).join("")];
-  const [i, setI] = useState(0);
+  const lines = doc.lines;
+  const [prog, setProg] = useState(0);
   const [playing, setPlaying] = useState(true);
-
-  useEffect(() => {
-    if (!playing) return;
-    const id = setTimeout(() => setI((v) => (v + 1) % lines.length), LINE_MS);
-    return () => clearTimeout(id);
-  }, [i, playing, lines.length]);
-
+  const [sound, setSound] = useState(false); // always starts silent; sound only on tap
+  const i = Math.min(lines.length - 1, Math.floor(prog * lines.length));
   const words = lines[i].split(" ");
 
   return (
-    <div className="relative h-full w-full overflow-hidden bg-black">
-      <img src={doc.img} alt={`${doc.name}, ${doc.spec}`} className="kenburns absolute inset-0 h-full w-full object-cover" />
+    <div className="relative h-full w-full overflow-hidden" style={{ background: doc.grad }}>
+      <Media
+        src={doc.video}
+        className="absolute inset-0 h-full w-full object-cover"
+        muted={!sound}
+        paused={!playing}
+        onProgress={setProg}
+      />
       <div
         className="absolute inset-0"
         style={{ background: "linear-gradient(to top, rgba(3,6,22,.86) 6%, rgba(3,6,22,.05) 55%, rgba(3,6,22,.35))" }}
@@ -48,20 +38,21 @@ function ReelPlayer({ doc }: { doc: HeroDoc }) {
         {lines.map((_, k) => (
           <span key={k} className="h-[3px] flex-1 overflow-hidden rounded bg-white/30">
             <b
-              key={`${k}-${i}-${playing}`}
               className="block h-full bg-ly"
-              style={{
-                width: k < i ? "100%" : k === i && playing ? "100%" : k === i ? "40%" : "0%",
-                animation: k === i && playing ? `fillW ${LINE_MS}ms linear both` : undefined,
-              }}
+              style={{ width: `${Math.max(0, Math.min(1, prog * lines.length - k)) * 100}%` }}
             />
           </span>
         ))}
       </div>
 
       <div className="absolute left-4 right-14 top-12 z-10 flex items-center gap-2">
-        <img src={doc.img} alt="" aria-hidden="true" className="h-7 w-7 rounded-full object-cover" />
-        <span className="text-[12px] font-semibold text-white drop-shadow">
+        <span
+          className="grid h-7 w-7 flex-none place-items-center rounded-full bg-ly font-d text-[10px] font-extrabold text-ink"
+          aria-hidden="true"
+        >
+          {initials(doc.name)}
+        </span>
+        <span className="text-[12px] font-semibold leading-tight text-white drop-shadow">
           {doc.name}, {doc.spec}
         </span>
       </div>
@@ -89,15 +80,21 @@ function ReelPlayer({ doc }: { doc: HeroDoc }) {
       <div className="absolute inset-x-4 bottom-6 z-10 flex items-center gap-3">
         <button
           onClick={() => setPlaying((p) => !p)}
-          className="grid h-10 w-10 place-items-center rounded-full bg-ly text-ink transition-transform hover:scale-105"
-          aria-label={playing ? "Pause captions" : "Play captions"}
+          className="grid h-10 w-10 flex-none place-items-center rounded-full bg-ly text-ink transition-transform hover:scale-105"
+          aria-label={playing ? "Pause Reel" : "Play Reel"}
         >
           {playing ? <Pause size={17} fill="#111" /> : <Play size={17} fill="#111" />}
         </button>
-        <span className="text-[11px] font-medium text-white/85">
-          {playing ? "Playing" : "Paused"} · Hinglish captions · {String(i + 1).padStart(2, "0")}/
-          {String(lines.length).padStart(2, "0")}
+        <span className="min-w-0 flex-1 text-[11px] font-medium text-white/85">
+          Hinglish captions · {String(i + 1).padStart(2, "0")}/{String(lines.length).padStart(2, "0")}
         </span>
+        <button
+          onClick={() => setSound((m) => !m)}
+          className="grid h-10 w-10 flex-none place-items-center rounded-full bg-white/20 text-white backdrop-blur-sm transition-transform hover:scale-105"
+          aria-label={sound ? "Mute" : "Turn sound on"}
+        >
+          {sound ? <Volume2 size={17} /> : <VolumeX size={17} />}
+        </button>
       </div>
     </div>
   );
@@ -110,12 +107,14 @@ export default function Hero() {
   const [main, setMain] = useState<HeroDoc>(HERO_A);
   const [side, setSide] = useState<HeroDoc>(HERO_B);
   const [gen, setGen] = useState(0);
+  const [sound, setSound] = useState(false); // main phone: silent until the unmute button is tapped
   const ui = useUi();
 
   const swap = useCallback(() => {
     setMain(side);
     setSide(main);
     setGen((g) => g + 1);
+    setSound(false);
   }, [main, side]);
 
   return (
@@ -208,15 +207,19 @@ export default function Hero() {
           >
             <div className="t">
               <AnimatePresence mode="wait">
-                <motion.img
-                  key={side.name}
-                  src={side.img}
-                  alt={`${side.name}, ${side.spec}, preview clip`}
+                <motion.div
+                  key={side.id}
+                  className="h-full w-full"
                   initial={{ opacity: 0, scale: 1.06 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.96 }}
                   transition={{ duration: 0.4, ease: EASE }}
-                />
+                  style={{ background: side.grad }}
+                  role="img"
+                  aria-label={`${side.name}, ${side.spec}, preview clip`}
+                >
+                  <Media still src={side.video} className="h-full w-full object-cover" />
+                </motion.div>
               </AnimatePresence>
               <span className="absolute bottom-1.5 left-1.5 z-10 grid h-6 w-6 place-items-center rounded-full bg-ly text-ink opacity-90 transition-opacity group-hover:opacity-100">
                 <ArrowLeftRight size={12} aria-hidden="true" />
@@ -242,7 +245,7 @@ export default function Hero() {
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.45 }}
                 >
-                  <img src={main.img} alt={`${main.name}, ${main.spec}`} className="kenburns" />
+                  <Media src={main.video} muted={!sound} className="absolute inset-0 h-full w-full object-cover" />
                   <div className="scrim" />
                   <span className="nametag">
                     {main.name} · {main.spec}
@@ -256,11 +259,18 @@ export default function Hero() {
               </AnimatePresence>
 
               <button
+                className="playb snd"
+                onClick={() => setSound((m) => !m)}
+                aria-label={sound ? "Mute" : "Turn sound on"}
+              >
+                {sound ? <Volume2 size={19} /> : <VolumeX size={19} />}
+              </button>
+              <button
                 className="playb"
                 onClick={() => ui.open(<ReelPlayer doc={main} />, "video")}
-                aria-label={`Play a sample Reel from ${main.name}`}
+                aria-label={`Open ${main.name}'s Reel full size`}
               >
-                <Play size={20} fill="#111" />
+                <Play size={19} fill="#111" />
               </button>
             </div>
           </div>

@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import Media from "./Media";
+import { DOCTORS } from "../data";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Check,
@@ -131,11 +133,10 @@ export default function HowItWorks() {
 
                 {/* recording */}
                 <div className={cn("ms ms-rec", ph === 1 && "on")}>
-                  <img
-                    src="img/reel-1.jpg"
-                    alt=""
-                    aria-hidden="true"
-                    className="kenburns absolute inset-0 h-full w-full object-cover opacity-80"
+                  <Media
+                    still
+                    src={DOCTORS[3].video}
+                    className="absolute inset-0 h-full w-full object-cover opacity-80"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/35" />
                   <div className="relative z-10 mt-1 text-[10px] font-semibold opacity-90">
@@ -159,8 +160,8 @@ export default function HowItWorks() {
                     </div>
                   </div>
                   <div className={cn("msg", ph === 2 && "on")}>
-                    <img src="img/reel-4.jpg" alt="" aria-hidden="true" className="mb-1.5 h-[80px] w-full rounded-md object-cover" />
-                    Your Reel on belly fat is ready. Post it?
+                    <Media still src={DOCTORS[0].video} className="mb-1.5 h-[80px] w-full rounded-md object-cover" />
+                    Your Reel on chest pain is ready. Post it?
                   </div>
                   <div className={cn("msg me", ph === 2 && sub >= 3 && "on")} style={{ transitionDelay: "0.35s" }}>
                     Yes, post it
@@ -301,7 +302,7 @@ export default function HowItWorks() {
               <small>
                 <MessageCircle size={11} aria-hidden="true" /> WhatsApp · <span className="font-semibold text-[#188a4c]">now</span>
               </small>
-              Namaste doctor, I saw your Reel on belly fat. Can I book a consultation?
+              Namaste doctor, I saw your Reel on chest pain. Can I book a consultation?
             </div>
 
             {CHECK_B.map((c, k) => {

@@ -1,21 +1,29 @@
 import { useEffect, useState } from "react";
+import { Volume2, VolumeX } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { EASE, Reveal } from "./shared";
 import { FORMATS } from "../data";
 import { cn } from "../utils/cn";
+import Media from "./Media";
 
 export default function Formats() {
   const [fi, setFi] = useState(0);
-  const [reelIdx, setReelIdx] = useState(0); // 0 or 1 for two reels per format
+  const [prog, setProg] = useState(0);
+  const [sound, setSound] = useState(false);
+  const [failed, setFailed] = useState(false); // video file missing: keep rotating on a timer
+  const next = () => {
+    setFi((v) => (v + 1) % FORMATS.length);
+    setProg(0);
+  };
   useEffect(() => {
-    const id = setTimeout(() => {
-      setFi((v) => (v + 1) % FORMATS.length);
-      setReelIdx(0);
-    }, 5000);
+    if (!failed) return;
+    const id = setTimeout(next, 6000);
     return () => clearTimeout(id);
-  }, [fi]);
+  }, [fi, failed]);
   const f = FORMATS[fi];
-  const currentImg = reelIdx === 0 ? f.img : f.img2;
+  const doc = f.doc;
+  const li = Math.min(doc.lines.length - 1, Math.floor(prog * doc.lines.length));
+  const line = doc.lines[li];
 
   return (
     <section id="reels" className="rounded-t-[40px] bg-bk py-16 text-white md:py-24">
@@ -31,14 +39,14 @@ export default function Formats() {
             </Reveal>
             <Reveal delay={0.1}>
               <p className="lead lead-dark mt-4 max-w-[520px]">
-                Five formats we make for doctors. The frames below are samples; your own Reels
+                Four formats we make for doctors. The frames below are samples; your own Reels
                 replace them. Tap a format to switch.
               </p>
             </Reveal>
             <Reveal delay={0.16}>
               <div className="no-scrollbar mt-7 max-lg:-mx-5 max-lg:flex max-lg:gap-2 max-lg:overflow-x-auto max-lg:px-5 max-lg:pb-1">
                 {FORMATS.map((fm, k) => (
-                  <button key={k} className={cn("fi", k === fi && "on")} onClick={() => { setFi(k); setReelIdx(0); }}>
+                  <button key={k} className={cn("fi", k === fi && "on")} onClick={() => { setFi(k); setProg(0); }}>
                     <span className="n">{fm.no}</span>
                     <div className="min-w-0">
                       <h3>{fm.title}</h3>
@@ -59,43 +67,46 @@ export default function Formats() {
             </Reveal>
           </div>
 
-          {/* right — phone preview */}
+          {/* right: phone preview */}
           <Reveal delay={0.15} className="justify-self-center">
-            <div
-              role="button"
-              tabIndex={0}
-              className="mx-auto w-fit cursor-pointer"
-              onClick={() => setReelIdx((v) => (v + 1) % 2)}
-              onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && setReelIdx((v) => (v + 1) % 2)}
-              aria-label="Next reel in this format"
-            >
+            <div className="mx-auto w-fit">
               <div className="phone">
                 <div className="scr">
                   <div className="notch" />
                   <AnimatePresence mode="wait">
                     <motion.div
-                      key={`${fi}-${reelIdx}`}
+                      key={fi}
                       className="absolute inset-0"
-                      style={{ background: f.grad }}
+                      style={{ background: doc.grad }}
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.4 }}
                     >
-                      {currentImg && (
-                        <img src={currentImg} alt="" className="absolute inset-0 h-full w-full object-cover kenburns" loading="lazy" />
-                      )}
+                      <Media
+                        src={doc.video}
+                        loop={false}
+                        muted={!sound}
+                        className="absolute inset-0 h-full w-full object-cover"
+                        onProgress={setProg}
+                        onEnded={next}
+                        onFail={() => setFailed(true)}
+                      />
                       <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(3,6,22,.82), rgba(3,6,22,.04) 55%, rgba(3,6,22,.3))" }} />
                     </motion.div>
                   </AnimatePresence>
-                  <span className="nametag">{f.doc} · {f.spec}</span>
+                  <span className="nametag">{doc.name} · {doc.spec}</span>
                   <div className="absolute left-3 right-3 top-9 z-[3] h-[3px] overflow-hidden rounded bg-white/25">
-                    <b key={`bar-${fi}`} className="block h-full bg-ly" style={{ animation: "fillW 5s linear both" }} />
+                    <b
+                      key={failed ? `bar-${fi}` : "bar"}
+                      className="block h-full bg-ly"
+                      style={failed ? { animation: "fillW 6s linear both" } : { width: `${prog * 100}%` }}
+                    />
                   </div>
-                  <div className="absolute inset-x-0 bottom-0 z-[2] p-4 pb-11 text-left">
+                  <div className="absolute inset-x-0 bottom-0 z-[2] p-4 pb-11 pr-14 text-left">
                     <AnimatePresence mode="wait">
-                      <div className="cap" key={`${fi}-${reelIdx}`}>
-                        {f.cap.split(" ").map((w, k) => (
+                      <div className="cap" key={`${fi}-${li}`}>
+                        {line.split(" ").map((w, k) => (
                           <motion.span
                             key={k}
                             className="mr-1.5 inline-block"
@@ -109,49 +120,33 @@ export default function Formats() {
                       </div>
                     </AnimatePresence>
                   </div>
+                  <button
+                    onClick={() => setSound((m) => !m)}
+                    className="absolute bottom-3 right-3 z-[4] grid h-9 w-9 place-items-center rounded-full bg-ly text-ink"
+                    aria-label={sound ? "Mute" : "Turn sound on"}
+                  >
+                    {sound ? <Volume2 size={16} /> : <VolumeX size={16} />}
+                  </button>
                 </div>
               </div>
             </div>
 
-            {/* two-reel thumbnails */}
-            <div className="mt-4 flex items-center justify-center gap-3">
-              <span className="text-[10px] text-white/40 font-semibold">2 Reels in this format</span>
-              <div className="flex gap-2">
-                {[f.img, f.img2].map((img, k) => (
-                  <button
-                    key={k}
-                    onClick={() => setReelIdx(k)}
-                    className={cn(
-                      "h-12 w-9 overflow-hidden rounded-lg border-2 transition-all",
-                      k === reelIdx ? "border-ly scale-110" : "border-white/20 opacity-60 hover:opacity-100",
-                    )}
-                  >
-                    {img ? (
-                      <img src={img} alt="" className="h-full w-full object-cover" />
-                    ) : (
-                      <div className="h-full w-full" style={{ background: f.grad }} />
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-4 flex items-center gap-3.5 max-lg:justify-center max-lg:text-center">
+            <div className="mt-5 flex items-center gap-3.5 max-lg:justify-center max-lg:text-center">
               <div>
                 <AnimatePresence mode="wait">
                   <motion.h3
-                    key={`${fi}-${reelIdx}`}
+                    key={fi}
                     className="text-[clamp(20px,3vw,28px)]"
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -6 }}
                     transition={{ duration: 0.3 }}
                   >
-                    {f.cap}
+                    {doc.lines[0]}
                   </motion.h3>
                 </AnimatePresence>
                 <small className="text-[13px] text-[#8f8f98]">
-                  {f.doc}, {f.spec} · Reel {String(fi + 1).padStart(2, "0")} of 05
+                  {doc.name}, {doc.spec} · Reel {String(fi + 1).padStart(2, "0")} of {String(FORMATS.length).padStart(2, "0")}
                 </small>
               </div>
             </div>

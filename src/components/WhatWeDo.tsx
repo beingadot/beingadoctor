@@ -1,4 +1,6 @@
 import { ArrowRight, Search, Video, MousePointerClick, Phone, MessageCircle, CalendarCheck, BellRing, MapPin } from "lucide-react";
+import Media from "./Media";
+import { DOCTORS } from "../data";
 import { Head, Reveal } from "./shared";
 
 export default function WhatWeDo() {
@@ -27,8 +29,8 @@ export default function WhatWeDo() {
                     <div className="flex items-center gap-2">
                       <MapPin size={14} className="text-nv" />
                       <div>
-                        <b className="block text-[11px] font-d font-bold">Dr. Meera Iyer</b>
-                        <span className="text-[9px] text-mu">Dermatologist · Open now</span>
+                        <b className="block text-[11px] font-d font-bold">Dr. Ananya Sharma</b>
+                        <span className="text-[9px] text-mu">Dentist · Open now</span>
                       </div>
                     </div>
                     <div className="mt-2 flex gap-1.5">
@@ -40,7 +42,7 @@ export default function WhatWeDo() {
                 {/* floating specialty badge */}
                 <div className="absolute right-2 top-2 rounded-lg bg-nv px-2 py-1 text-right text-[8px] font-bold uppercase tracking-[0.1em] text-white shadow-lg">
                   Your specialty<br />
-                  <span className="font-d text-[11px] text-ly">Dermatology</span>
+                  <span className="font-d text-[11px] text-ly">Dentistry</span>
                 </div>
               </div>
               <h3><i><Search size={11} /></i>Be found</h3>
@@ -65,9 +67,9 @@ export default function WhatWeDo() {
           <Reveal delay={0.12}>
             <div className="card card-b h-full">
               <div className="im relative">
-                <img
-                  src="img/reel-2.jpg"
-                  alt="Sample Reel frame: a dermatologist explaining a skin myth to camera"
+                <Media
+                  still
+                  src={DOCTORS[0].video}
                   className="absolute inset-0 h-full w-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
@@ -88,7 +90,7 @@ export default function WhatWeDo() {
                   </div>
                 </div>
                 <div className="absolute bottom-2 left-2 z-10 rounded-md bg-black/50 px-2 py-1 text-[9px] font-semibold text-white backdrop-blur-sm">
-                  sugar blockage milta hai?
+                  Kya har chest pain heart attack hota hai?
                 </div>
               </div>
               <h3><i><Video size={11} /></i>Be trusted</h3>
