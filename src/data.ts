@@ -109,7 +109,7 @@ export const SERVICES: Service[] = [
   {
     title: "Google Business Profile",
     blurb: "We set up and manage your Google listing so nearby patients find and trust you.",
-    price: "₹10,000", note: "/month · Optimisation + management",
+    price: "₹10,000", note: "+2000/month · Optimisation + management",
     items: [
       "Complete profile setup and verification support",
       "Categories, services and description optimised",
@@ -141,7 +141,7 @@ export const SERVICES: Service[] = [
   {
     title: "Clinic Website",
     blurb: "A fast, mobile-friendly website, so visitors become appointments.",
-    price: "From ₹15,000", note: "Final price based on your requirements",
+    price: "From ₹15,000", note: "With 6 months management · Client's Domain",
     items: [
       "Fast, mobile-friendly single or multi-page site",
       "Your profile, services and credentials",
