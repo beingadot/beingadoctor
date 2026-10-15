@@ -78,7 +78,7 @@ export default function Pricing() {
                   target="_blank"
                   rel="noopener"
                 >
-                  Ask about {p.name.charAt(0) + p.name.slice(1).toLowerCase()} on WhatsApp
+                  Ask on WhatsApp
                 </a>
               </div>
             </Reveal>
@@ -136,7 +136,7 @@ function ServiceModal({ s }: { s: Service }) {
         target="_blank"
         rel="noopener"
       >
-        Ask about {s.key} on WhatsApp
+        Ask on WhatsApp
       </a>
     </div>
   );
@@ -203,7 +203,7 @@ export function Services() {
                       target="_blank"
                       rel="noopener"
                     >
-                      Ask about {s.key} on WhatsApp <ArrowRight size={14} />
+                      Ask on WhatsApp <ArrowRight size={14} />
                     </a>
                   </div>
                 </div>
