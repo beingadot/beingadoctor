@@ -127,7 +127,7 @@ export const SERVICES: Service[] = [
   {
     title: "Meta & Google Ads",
     blurb: "Ads on Instagram, Facebook and Google that reach people near you looking for your specialty.",
-    price: "From ₹20,000", note: "/month · Ad spend separate, paid directly to Meta/Google",
+    price: "From ₹20,000", note: "/month · Ad spend separate",
     items: [
       "Ads on Instagram, Facebook and Google",
       "Reach people near you looking for your specialty",
