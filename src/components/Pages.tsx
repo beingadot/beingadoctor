@@ -50,7 +50,7 @@ export function useHashRoute() {
       refunds: "Refund Policy | Beingadot",
       cookies: "Cookie Policy | Beingadot",
       "404": "Page not found | Beingadot",
-      "": "Beingadot | AI Reels and Digital Marketing for Doctors",
+      "": "Beingadot | Doctors",
     };
     document.title = titles[route] ?? titles[""];
   }, [route]);
